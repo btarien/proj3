@@ -10,17 +10,17 @@
 
 using namespace std;
 
-void addl(Decoder *decoder)
+void Decoder::addl(Decoder *decoder)
 {
   *decoder->operand2 = *decoder->operand1 + *decoder->operand2;
 }  // addl()
 
-void andl(Decoder *decoder)
+void Decoder::andl(Decoder *decoder)
 {
   *decoder->operand2 = *decoder->operand1 & *decoder->operand2;
 }  // andl()
 
-void execute(Decoder *decoder, Registers *registers, int memory[1001])
+void Decoder::execute(Decoder *decoder, Registers *registers, int memory[1001])
 {
   const char *opcodes[] = { "addl", "andl", "leave", "movl", "pushl", "ret",
     "subl"};
@@ -45,7 +45,7 @@ void execute(Decoder *decoder, Registers *registers, int memory[1001])
  
 }  // execute()
 
-void leave(Registers *registers, int memory[1001])
+void Decoder::leave(Registers *registers, int memory[1001])
 {
   registers->regs[esp] = registers->regs[ebp];
   registers->regs[ebp] = memory[registers->regs[esp]];
@@ -53,13 +53,13 @@ void leave(Registers *registers, int memory[1001])
 }  // leave()
 
 
-void movl(Decoder *decoder)
+void Decoder::movl(Decoder *decoder)
 {
   *decoder->operand2 = *decoder->operand1;
 }  // movl()
 
 
-void parse(Decoder *decoder, Instruction *instruction, Registers *registers, 
+void Decoder::parse(Decoder *decoder, Instruction *instruction, Registers *registers, 
            int memory[1001])
 {
   char *ptr, info[1000];
@@ -84,21 +84,21 @@ void parse(Decoder *decoder, Instruction *instruction, Registers *registers,
 
 
 
-void pushl(Decoder *decoder, Registers *registers, int memory[1001])
+void Decoder::pushl(Decoder *decoder, Registers *registers, int memory[1001])
 {
   registers->regs[esp] -= 4;
   memory[registers->regs[esp]] = *decoder->operand1;
 }  // pushl()
 
 
-void ret(Registers *registers, int memory[1001])
+void Decoder::ret(Registers *registers, int memory[1001])
 {
   registers->regs[eip] = memory[registers->regs[esp]];
   registers->regs[esp] += 4;
 }  // ret()
 
 
-void subl(Decoder *decoder)
+void Decoder::subl(Decoder *decoder)
 {
   *decoder->operand2 = *decoder->operand2 - *decoder->operand1;
 }  // subl()
