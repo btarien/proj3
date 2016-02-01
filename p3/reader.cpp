@@ -2,8 +2,8 @@
 #include <iostream>
 #include <fstream>
 #include <iomanip>
-#include <string.h>
-#include <stdlib.h>
+#include <cstring>
+#include <cstdlib>
 #include "main.h"
 #include "reader.h"
 #include "registers.h"
@@ -24,8 +24,13 @@ void Reader::read(Registers *registers, const char *filename)
 {
   char line[256], *ptr;
   int address = 100, instructionCount = 0;
-  FILE *fp;
-  fp = fopen(filename, "r");
+  // FILE *fp;
+  // fp = fopen(filename, "r");
+  string filename;
+  ifstream inf;
+  cout<<"Enter file name: \n";
+  getLine(cin, filename)
+  inf.open(filename, ifstream::in);
   
   while(fgets(line, 256, fp) != 0)
   {
