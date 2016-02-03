@@ -6,7 +6,6 @@
 #include "decoder.h"
 #include "instruction.h"
 #include "registers.h"
-#include "main.h"
 
 using namespace std;
 
@@ -47,9 +46,14 @@ void Decoder::execute(Decoder *decoder, Registers *registers, int memory[1001])
 
 void Decoder::leave(Registers *registers, int memory[1001])
 {
-  registers->regs[esp] = registers->regs[ebp];
-  registers->regs[ebp] = memory[registers->regs[esp]];
-  registers->regs[esp] += 4;
+  //registers->regs[esp] = registers->regs[ebp];
+  registers.set(esp, registers.get(ebp));
+  
+  //registers->regs[ebp] = memory[registers->regs[esp]];
+  registers.set(ebp, memory[registers.get(esp)];
+  
+  //registers->regs[esp] += 4;
+  registers.set(esp, registers.get(eip)+4);
 }  // leave()
 
 
@@ -86,15 +90,20 @@ void Decoder::parse(Decoder *decoder, Instruction *instruction, Registers *regis
 
 void Decoder::pushl(Decoder *decoder, Registers *registers, int memory[1001])
 {
-  registers->regs[esp] -= 4;
-  memory[registers->regs[esp]] = *decoder->operand1;
+  //registers->regs[esp] -= 4;
+  registers.set(esp, registers.get(esp)-4);
+  
+  //memory[registers->regs[esp]] = *decoder->operand1;
+  memory[registers.get(esp)] = decoder.get(operand1);
 }  // pushl()
 
 
 void Decoder::ret(Registers *registers, int memory[1001])
 {
-  registers->regs[eip] = memory[registers->regs[esp]];
-  registers->regs[esp] += 4;
+  //registers->regs[eip] = memory[registers->regs[esp]];
+  //registers->regs[esp] += 4;
+  registers.set(eip, memory[registers.get(esp)]);
+  registers.set(esp, registers.get(esp)+4);
 }  // ret()
 
 
