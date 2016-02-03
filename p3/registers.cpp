@@ -1,4 +1,5 @@
 #include <iostream>
+#include<cstdlib>
 #include "registers.h"
 
 void initialize(Registers *registers, int memory[1001])
