@@ -1,6 +1,5 @@
 #ifndef DECODER_H
 #define	DECODER_H
-// Author: Sean Davis
 
 #include "instruction.h"
 #include "registers.h"
@@ -25,7 +24,7 @@ public:
 	void execute(Decoder *decoder, Registers *registers, int memory[1001]);
 	const char* getOpcode();
 	const int getOperand1();
-	const int get Operand2();
+	const int getOperand2();
 	void setOpcode(char* opcod);
 	void setOperand1(int op1);
 	void set Operand2(int op2);
@@ -53,22 +52,22 @@ const int Decoder::getOperand2()
 
 void Decoder::setOpcode(char* opcod)
 {
-	int len=sizeof(opcod)/sizeof(char); 
+	int len = sizeof(opcod)/sizeof(char); 
 	opcod = new char[len + 1];
 
-	for(int i=0; i<len; i++)
+	for(int i = 0; i < len; i++)
 		opcode[i]=opcod[i]; 
 }
 
 
-void Decoder::setOperator1(int op1)
+void Decoder::setOperand1(int op1)
 {
-	operator1 = op1;
+	operand1 = op1;
 }
 
-void Decoder::setOperator2(int op2)
+void Decoder::setOperand2(int op2)
 {
-	operator2 = op2;
+	operand2 = op2;
 }
 
 
