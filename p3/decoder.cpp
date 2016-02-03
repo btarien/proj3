@@ -11,12 +11,12 @@ using namespace std;
 
 void Decoder::addl(Decoder *decoder)
 {
-  *decoder->operand2 = *decoder->operand1 + *decoder->operand2;
+  *setOperand2(*getOperand1() + *getOperand2());
 }  // addl()
 
 void Decoder::andl(Decoder *decoder)
 {
-  *decoder->operand2 = *decoder->operand1 & *decoder->operand2;
+  *setOperand2(*getOperand1() & *getOperand2();
 }  // andl()
 
 void Decoder::execute(Decoder *decoder, Registers *registers, int memory[1001])
@@ -59,7 +59,7 @@ void Decoder::leave(Registers *registers, int memory[1001])
 
 void Decoder::movl(Decoder *decoder)
 {
-  *decoder->operand2 = *decoder->operand1;
+  *setOperand2(*getOperand1);
 }  // movl()
 
 
@@ -71,16 +71,16 @@ void Decoder::parse(Decoder *decoder, Instruction *instruction, Registers *regis
   strcpy(info, instruction->info);
   
   
-  strcpy(decoder->opcode, strtok(info, " "));
+  strcpy(getOpcode(), strtok(info, " "));
   ptr = strtok(NULL, " ");
   
   if(ptr)
   {
-    decoder->operand1 = address(registers, ptr, memory);
+    setOperand1(address(registers, ptr, memory));
     ptr = strtok(NULL, " ");
     
     if(ptr)
-      decoder->operand2 = address(registers, ptr, memory);
+      setOperand2(address(registers, ptr, memory));
   } // if there is at least one operand
 }  // parse()
 
@@ -94,7 +94,7 @@ void Decoder::pushl(Decoder *decoder, Registers *registers, int memory[1001])
   registers.set(esp, registers.get(esp)-4);
   
   //memory[registers->regs[esp]] = *decoder->operand1;
-  memory[registers.get(esp)] = decoder.get(operand1);
+  memory[registers.get(esp)] = getOperand1();
 }  // pushl()
 
 
@@ -109,5 +109,5 @@ void Decoder::ret(Registers *registers, int memory[1001])
 
 void Decoder::subl(Decoder *decoder)
 {
-  *decoder->operand2 = *decoder->operand2 - *decoder->operand1;
+  *setOperand2(*getOperand2() - *getOperand1());
 }  // subl()
