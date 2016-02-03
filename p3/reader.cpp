@@ -1,7 +1,7 @@
-// Author: Sean Davis
 #include <iostream>
 #include <fstream>
 #include <iomanip>
+#include <string>
 #include <cstring>
 #include <cstdlib>
 #include "main.h"
@@ -14,7 +14,7 @@ void Reader::fetch(Instruction *instruction, Registers *registers)
 {
   int pos;
   
-  for(pos = 0; lines[pos].address != registers->regs[eip]; pos++);
+  for(pos = 0; lines[pos].getAddress() != registers->regs[eip]; pos++);
   
   *instruction = lines[pos];
   registers->regs[eip] += 4;
@@ -24,29 +24,37 @@ void Reader::read(Registers *registers, const char *filename)
 {
   char line[256], *ptr;
   int address = 100, instructionCount = 0;
-  // FILE *fp;
-  // fp = fopen(filename, "r");
-  string filename;
+  string str;
+
   ifstream inf;
-  cout<<"Enter file name: \n";
-  getLine(cin, filename)
-  inf.open(filename, ifstream::in);
+  inf.open(filename);
   
-  while(fgets(line, 256, fp) != 0)
+  while (getline(inf,str) != 0)
   {
-    for(ptr = strchr(line, '\t'); ptr; ptr = strchr(line, '\t'))
-      *ptr = ' ';  // replace all tabs with space characters
-    
-    *strchr(line, '\n') = '\0';  // eliminate \n;
-    
-    for(ptr = line; *ptr == ' '; ptr++);  // get past leading spaces
-    
-    if(*ptr != '.' && !strstr(line, "main:"))
+    for (int j = 0; j < str.length(); ++j)
+      line[j] = inf.get(); // read line from file into line[] array
+
+
+    // *ptr = inf.get();
+
+
+    for (int i = 0; i < str.length(); ++i)
     {
-      lines[instructionCount].address = address;
-      address += 4;
-      lines[instructionCount].info = new char*[strlen(ptr) + 1];
-      strcpy(lines[instructionCount++].info, ptr);
-    } // if not directive, nor main:
-  }  // while more in file
+      if(line[i] == '\t')
+        line[i] = ' ';  // replace all tabs with space characters
+      else if(line[i] == '\n')
+        line[i] == '\0';  // eliminate \n
+    }
+
+    for(ptr = line; *ptr == ' '; ptr++);  // get past leading spaces
+  
+    if(*ptr != '.' && !strstr(line, "main:"))
+      {
+        lines[instructionCount].setAddress(address);
+        address += 4;
+        lines[instructionCount++].setInfo(ptr);
+      } // if not directive, nor main:
+    }  // while more in file
+
+  inf.close();
 }  // read()
