@@ -39,13 +39,13 @@ const char* Decoder::getOpcode()
 
 const int Decoder::getOperand1()
 {
-	return operand1;
+	return *operand1;
 }
 
 
 const int Decoder::getOperand2()
 {
-	return operand2;
+	return *operand2;
 }
 
 
@@ -62,14 +62,13 @@ void Decoder::setOpcode(char* opcod)
 
 void Decoder::setOperand1(int op1)
 {
-	operand1 = op1;
+	*operand1 = op1;
 }
 
 void Decoder::setOperand2(int op2)
 {
-	operand2 = op2;
+	*operand2 = op2;
 }
 
 
 #endif	// DECODER_H 
-
