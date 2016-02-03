@@ -11,8 +11,8 @@ class Registers{
 	 int* address(Registers *registers, char *ptr, int memory[]);
 	 void initialize(Registers *registers, int memory[1001]);
 	 void print(Registers *registers, const char *instruction);
-	 int get();
-	 int set(int);
+	 int get(RegName regnum);
+	 int set(RegName regnum, int val);
 };
 
 Registers::get(RegName regnum){
