@@ -13,7 +13,7 @@ class Registers{
 	 void print(Registers *registers, const char *instruction);
 	 int get();
 	 int set(int);
-}
+};
 
 Registers::get(RegName regnum){
 	if(eax <= regnum <= eip){
