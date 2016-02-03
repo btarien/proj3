@@ -76,11 +76,11 @@ void Decoder::parse(Decoder *decoder, Instruction *instruction, Registers *regis
   
   if(ptr)
   {
-    setOperand1(registers->address(registers, ptr, memory));
+    setOperand1(*(registers->address(registers, ptr, memory)));
     ptr = strtok(NULL, " ");
     
     if(ptr)
-      setOperand2(registers->address(registers, ptr, memory));
+      setOperand2(*(registers->address(registers, ptr, memory)));
   } // if there is at least one operand
 }  // parse()
 
