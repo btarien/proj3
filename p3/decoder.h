@@ -1,74 +1,111 @@
-#ifndef DECODER_H
-#define	DECODER_H
-
+#include <cstring>
+#include <iostream>
+#include <fstream>
+#include <iomanip>
+#include "decoder.h"
 #include "instruction.h"
 #include "registers.h"
 
-class Decoder
+using namespace std;
+
+void Decoder::addl(Decoder *decoder)
 {
-  	char opcode[20];
-  	int *operand1;
-  	int *operand2;
+  setOperand2(getOperand1() + getOperand2());
+}  // addl()
+
+void Decoder::andl(Decoder *decoder)
+{
+  setOperand2(getOperand1() & getOperand2());
+}  // andl()
+
+void Decoder::execute(Decoder *decoder, Registers *registers, int memory[1001])
+{
+  const char *opcodes[] = { "addl", "andl", "leave", "movl", "pushl", "ret",
+    "subl"};
+  enum OpcodeNum {ADDL, ANDL, LEAVE, MOVL, PUSHL, RET, SUBL};
+  int opcodeNum;
   
-  	void addl(Decoder *decoder);
-	void andl(Decoder *decoder);
-	void leave(Registers *registers, int memory[1001]);
-	void movl(Decoder *decoder);
-	void pushl(Decoder *decoder, Registers *registers, int memory[1001]);
-	void ret(Registers *registers, int memory[1001]);
-	void subl(Decoder *decoder);
+  for(opcodeNum = ADDL; 
+    strcmp(getOpcode(), opcodes[opcodeNum]) != 0 || opcodeNum > SUBL;
+    ++opcodeNum);
+  
+  switch (opcodeNum)
+  {
+    case ADDL: addl(decoder); break;
+    case ANDL: andl(decoder); break;
+    case LEAVE: leave(registers, memory); break;
+    case MOVL: movl(decoder); break;
+    case PUSHL: pushl(decoder, registers, memory); break;
+    case RET: ret(registers, memory); break;
+    case SUBL: subl(decoder); break;
+    default: cout << "Invalid opcode!\n";
+  } // switch on oncodeNum
+ 
+}  // execute()
 
-public:
-	void parse(Decoder *decoder, Instruction *instruction, Registers *registers, 
-           int memory[1001]);
-	void execute(Decoder *decoder, Registers *registers, int memory[1001]);
-	const char* getOpcode();
-	const int getOperand1();
-	const int getOperand2();
-	void setOpcode(char* opcod);
-	void setOperand1(int op1);
-	void setOperand2(int op2);
-};
-
-
-const char* Decoder::getOpcode()
+void Decoder::leave(Registers *registers, int memory[1001])
 {
-	return opcode;
-}
+  //registers->regs[esp] = registers->regs[ebp];
+  registers->set(esp, registers->get(ebp));
+  
+  //registers->regs[ebp] = memory[registers->regs[esp]];
+  registers->set(ebp, memory[registers->get(esp)]);
+  
+  //registers->regs[esp] += 4;
+  registers->set(esp, registers->get(eip)+4);
+}  // leave()
 
 
-const int Decoder::getOperand1()
+void Decoder::movl(Decoder *decoder)
 {
-	return *operand1;
-}
+  setOperand2(getOperand1());
+}  // movl()
 
 
-const int Decoder::getOperand2()
+void Decoder::parse(Decoder *decoder, Instruction *instruction, Registers *registers, 
+           int memory[1001])
 {
-	return *operand2;
-}
+  char *ptr, info[1000];
+  
+  strcpy(info, instruction->getInfo());
+  
+  
+  strcpy(getOpcode(), strtok(info, " "));
+  ptr = strtok(NULL, " ");
+  
+  if(ptr)
+  {
+    setOperand1(registers->address(registers, ptr, memory));
+    ptr = strtok(NULL, " ");
+    
+    if(ptr)
+      setOperand2(registers->address(registers, ptr, memory));
+  } // if there is at least one operand
+}  // parse()
 
 
 
-void Decoder::setOpcode(char* opcod)
+
+void Decoder::pushl(Decoder *decoder, Registers *registers, int memory[1001])
 {
-	int len = sizeof(opcod)/sizeof(char); 
-	opcod = new char[len + 1];
+  //registers->regs[esp] -= 4;
+  registers->set(esp, registers->get(esp)-4);
+  
+  //memory[registers->regs[esp]] = *decoder->operand1;
+  memory[registers->get(esp)] = getOperand1();
+}  // pushl()
 
-	for(int i = 0; i < len; i++)
-		opcode[i]=opcod[i]; 
-}
 
-
-void Decoder::setOperand1(int op1)
+void Decoder::ret(Registers *registers, int memory[1001])
 {
-	*operand1 = op1;
-}
+  //registers->regs[eip] = memory[registers->regs[esp]];
+  //registers->regs[esp] += 4;
+  registers->set(eip, memory[registers->get(esp)]);
+  registers->set(esp, registers->get(esp)+4);
+}  // ret()
 
-void Decoder::setOperand2(int op2)
+
+void Decoder::subl(Decoder *decoder)
 {
-	*operand2 = op2;
-}
-
-
-#endif	// DECODER_H 
+  setOperand2(getOperand2() - getOperand1());
+}  // subl()
