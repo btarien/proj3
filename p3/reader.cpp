@@ -4,7 +4,6 @@
 #include <string>
 #include <cstring>
 #include <cstdlib>
-#include "main.h"
 #include "reader.h"
 #include "registers.h"
 
