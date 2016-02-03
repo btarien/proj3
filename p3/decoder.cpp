@@ -16,7 +16,7 @@ void Decoder::addl(Decoder *decoder)
 
 void Decoder::andl(Decoder *decoder)
 {
-  *setOperand2(*getOperand1() & *getOperand2();
+  *setOperand2(*getOperand1() & *getOperand2());
 }  // andl()
 
 void Decoder::execute(Decoder *decoder, Registers *registers, int memory[1001])
@@ -27,7 +27,7 @@ void Decoder::execute(Decoder *decoder, Registers *registers, int memory[1001])
   int opcodeNum;
   
   for(opcodeNum = ADDL; 
-    strcmp(decoder->opcode, opcodes[opcodeNum]) != 0 || opcodeNum > SUBL;
+    strcmp(getOpcode(), opcodes[opcodeNum]) != 0 || opcodeNum > SUBL;
     ++opcodeNum);
   
   switch (opcodeNum)
@@ -50,7 +50,7 @@ void Decoder::leave(Registers *registers, int memory[1001])
   registers.set(esp, registers.get(ebp));
   
   //registers->regs[ebp] = memory[registers->regs[esp]];
-  registers.set(ebp, memory[registers.get(esp)];
+  registers.set(ebp, memory[registers.get(esp)]);
   
   //registers->regs[esp] += 4;
   registers.set(esp, registers.get(eip)+4);
@@ -68,7 +68,7 @@ void Decoder::parse(Decoder *decoder, Instruction *instruction, Registers *regis
 {
   char *ptr, info[1000];
   
-  strcpy(info, instruction->info);
+  strcpy(info, instruction.getInfo());
   
   
   strcpy(getOpcode(), strtok(info, " "));
