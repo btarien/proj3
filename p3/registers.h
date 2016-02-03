@@ -12,7 +12,7 @@ class Registers{
 	 void initialize(Registers *registers, int memory[1001]);
 	 void print(Registers *registers, const char *instruction);
 	 int get();
-	 int set();
+	 int set(int);
 }
 
 Registers::get(RegName regnum){
