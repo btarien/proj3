@@ -27,7 +27,7 @@ public:
 	const int getOperand2();
 	void setOpcode(char* opcod);
 	void setOperand1(int op1);
-	void set Operand2(int op2);
+	void setOperand2(int op2);
 };
 
 
