@@ -1,5 +1,3 @@
-// Author: Sean Davis
-
 #include <iostream>
 #include "registers.h"
 
