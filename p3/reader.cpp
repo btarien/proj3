@@ -13,10 +13,10 @@ void Reader::fetch(Instruction *instruction, Registers *registers)
 {
   int pos;
   
-  for(pos = 0; lines[pos].getAddress() != registers.get(eip); pos++);
+  for(pos = 0; lines[pos].getAddress() != registers->get(eip); pos++);
   
   *instruction = lines[pos];
-  registers.set(eip, registers.get(eip) + 4);
+  registers->set(eip, (registers->get(eip) + 4));
 } // fetch()
 
 void Reader::read(Registers *registers, const char *filename)
