@@ -26,6 +26,9 @@ public:
 	const char* getOpcode();
 	const int getOperand1();
 	const int get Operand2();
+	void setOpcode(char* opcod);
+	void setOperand1(int op1);
+	void set Operand2(int op2);
 };
 
 
@@ -48,7 +51,7 @@ const int Decoder::getOperand2()
 
 
 
-void Decoder::setOpcode(const char* opcod)
+void Decoder::setOpcode(char* opcod)
 {
 	int len=sizeof(opcod)/sizeof(char); 
 	opcod = new char[len + 1];
