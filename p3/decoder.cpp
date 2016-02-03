@@ -68,7 +68,7 @@ void Decoder::parse(Decoder *decoder, Instruction *instruction, Registers *regis
 {
   char *ptr, info[1000];
   
-  strcpy(info, instruction.getInfo());
+  strcpy(info, instruction->getInfo());
   
   
   strcpy(getOpcode(), strtok(info, " "));
@@ -76,14 +76,13 @@ void Decoder::parse(Decoder *decoder, Instruction *instruction, Registers *regis
   
   if(ptr)
   {
-    setOperand1(address(registers, ptr, memory));
+    setOperand1(registers->address(registers, ptr, memory));
     ptr = strtok(NULL, " ");
     
     if(ptr)
-      setOperand2(address(registers, ptr, memory));
+      setOperand2(registers->address(registers, ptr, memory));
   } // if there is at least one operand
 }  // parse()
-
 
 
 
@@ -91,10 +90,10 @@ void Decoder::parse(Decoder *decoder, Instruction *instruction, Registers *regis
 void Decoder::pushl(Decoder *decoder, Registers *registers, int memory[1001])
 {
   //registers->regs[esp] -= 4;
-  registers.set(esp, registers.get(esp)-4);
+  registers->set(esp, registers->get(esp)-4);
   
   //memory[registers->regs[esp]] = *decoder->operand1;
-  memory[registers.get(esp)] = getOperand1();
+  memory[registers->get(esp)] = getOperand1();
 }  // pushl()
 
 
@@ -102,8 +101,8 @@ void Decoder::ret(Registers *registers, int memory[1001])
 {
   //registers->regs[eip] = memory[registers->regs[esp]];
   //registers->regs[esp] += 4;
-  registers.set(eip, memory[registers.get(esp)]);
-  registers.set(esp, registers.get(esp)+4);
+  registers->set(eip, memory[registers->get(esp)]);
+  registers->set(esp, registers->get(esp)+4);
 }  // ret()
 
 
