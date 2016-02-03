@@ -1,6 +1,9 @@
 #include <iostream>
+#include <iomanip>
 #include <cstdlib>
 #include "registers.h"
+
+using namespace std;
 
 void initialize(Registers *registers, int memory[1001])
 {
@@ -13,10 +16,11 @@ void initialize(Registers *registers, int memory[1001])
 
 void print(Registers *registers, const char *instruction)
 {
-  printf("%-20s eip: %3d eax: %3d ebp: %3d esp: %3d\n", instruction,
-    registers->get(eip), registers->get(eax), registers->get(ebp),
-    registers->get(esp);
+  cout << setw(20) << "eip: " << instruction << "%3d eax: " << registers->get(eip) 
+  << "%3d ebp: " << registers->get(eax) << "%3d esp: "<< registers->get(ebp) 
+  << "%3d\n" << registers->get(esp) << endl;
 }  // print()
+
 
 int* address(Registers *registers, char *operand, int memory[])
 {
@@ -35,18 +39,32 @@ int* address(Registers *registers, char *operand, int memory[])
   } // if immediate mode
 
   for(regNum = eax; regNum <= eip; regNum++)
+   
+
+
     if(strstr(operand, regNames[regNum]))
       break;
 
-  ptr = strchr(operand, '(');
+    for (int i = 0; i < sizeof(operand); ++i)
+    {
+      if(operand[i] == '(')
+      {
+        ptr = &operand[i];
+        break;
+      }
+    }
+
+  // ptr = strchr(operand, '(');
 
   if(ptr) // some form of indirect addressing
   {
     *ptr = '\0';  // terminate operand string at first '('
     index = atoi(operand);  // will return 0 if no number there!
-    return  &memory[registers->regs[regNum] + index];
+    // return  &memory[registers->regs[regNum] + index];
+
+    return &memory[registers.get(regNum) + index]
   } // if ptr
   else  // direct addressing
-    return &(registers->regs[regNum]);
+    return &(registers.get(regNum));
 
 } // address ()
