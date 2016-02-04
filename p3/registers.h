@@ -12,7 +12,7 @@ class Registers{
 	 void initialize(Registers *registers, int memory[1001]);
 	 void print(Registers *registers, const char *instruction);
 	 int get(RegName regnum);
-	 int set(RegName regnum, int val);
+	 void set(RegName regnum, int val);
 };
 
 int Registers::get(RegName regnum){
@@ -24,12 +24,11 @@ int Registers::get(RegName regnum){
 	}
 }
 
-int Registers::set(RegName regnum, int val){
+void Registers::set(RegName regnum, int val){
 	if(eax <= regnum && regnum <= eip){
 		regs[regnum] = val;
 	}
 	else{
-		return 0;	
 	}
 }
 
