@@ -16,7 +16,7 @@ class Registers{
 };
 
 int Registers::get(RegName regnum){
-	if(eax <= regnum <= eip){
+	if(eax <= regnum && regnum <= eip){
 		return regs[regnum];
 	}
 	else{
@@ -25,7 +25,7 @@ int Registers::get(RegName regnum){
 }
 
 int Registers::set(RegName regnum, int val){
-	if(eax <= regnum <= eip){
+	if(eax <= regnum && regnum <= eip){
 		regs[regnum] = val;
 	}
 	else{
