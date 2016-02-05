@@ -1,4 +1,3 @@
-// Author: Sean Davis
 #include <cstring>
 #include <iostream>
 #include <fstream>
@@ -9,104 +8,141 @@
 
 using namespace std;
 
-void Decoder::addl(Decoder *decoder)
+void Decoder::addl()
 {
   setOperand2(getOperand1() + getOperand2());
 }  // addl()
 
-void Decoder::andl(Decoder *decoder)
+
+void Decoder::andl()
 {
   setOperand2(getOperand1() & getOperand2());
 }  // andl()
 
-void Decoder::execute(Decoder *decoder, Registers *registers, int memory[1001])
+
+void Decoder::execute(Registers *registers, int memory[1001])
 {
+
   const char *opcodes[] = { "addl", "andl", "leave", "movl", "pushl", "ret",
     "subl"};
+
   enum OpcodeNum {ADDL, ANDL, LEAVE, MOVL, PUSHL, RET, SUBL};
   int opcodeNum;
-  
+
   for(opcodeNum = ADDL; 
-    strcmp(getOpcode(), opcodes[opcodeNum]) != 0 || opcodeNum > SUBL;
+    strcmp(opcode, opcodes[opcodeNum]) != 0 || opcodeNum > SUBL;
     ++opcodeNum);
   
   switch (opcodeNum)
   {
-    case ADDL: addl(decoder); break;
-    case ANDL: andl(decoder); break;
+    case ADDL: addl(); break;
+    case ANDL: andl(); break;
     case LEAVE: leave(registers, memory); break;
-    case MOVL: movl(decoder); break;
-    case PUSHL: pushl(decoder, registers, memory); break;
+    case MOVL: movl(); break;
+    case PUSHL: pushl(registers, memory); break;
     case RET: ret(registers, memory); break;
-    case SUBL: subl(decoder); break;
+    case SUBL: subl(); break;
     default: cout << "Invalid opcode!\n";
   } // switch on oncodeNum
- 
 }  // execute()
+
 
 void Decoder::leave(Registers *registers, int memory[1001])
 {
-  //registers->regs[esp] = registers->regs[ebp];
-  registers->set(esp, registers->get(ebp));
-  
-  //registers->regs[ebp] = memory[registers->regs[esp]];
+  registers->set(esp, registers->get(ebp)); 
   registers->set(ebp, memory[registers->get(esp)]);
-  
-  //registers->regs[esp] += 4;
-  registers->set(esp, registers->get(eip)+4);
+  registers->set(esp, registers->get(esp)+4);
 }  // leave()
 
 
-void Decoder::movl(Decoder *decoder)
+void Decoder::movl()
 {
   setOperand2(getOperand1());
 }  // movl()
 
 
-void Decoder::parse(Decoder *decoder, Instruction *instruction, Registers *registers, 
+void Decoder::parse(Instruction *instruction, Registers *registers, 
            int memory[1001])
 {
   char *ptr, info[1000];
-  
+
   strcpy(info, instruction->getInfo());
   
   
-  strcpy(getOpcode(), strtok(info, " "));
+  strcpy(opcode, strtok(info, " "));
   ptr = strtok(NULL, " ");
   
   if(ptr)
   {
-    setOperand1(*(registers->address(registers, ptr, memory)));
+    operand1 = registers->address(ptr, memory);
     ptr = strtok(NULL, " ");
     
     if(ptr)
-      setOperand2(*(registers->address(registers, ptr, memory)));
+      operand2= registers->address(ptr, memory);
   } // if there is at least one operand
 }  // parse()
 
 
-
-
-void Decoder::pushl(Decoder *decoder, Registers *registers, int memory[1001])
+void Decoder::pushl(Registers *registers, int memory[1001])
 {
-  //registers->regs[esp] -= 4;
-  registers->set(esp, registers->get(esp)-4);
-  
-  //memory[registers->regs[esp]] = *decoder->operand1;
+  registers->set(esp, registers->get(esp)-4);  
   memory[registers->get(esp)] = getOperand1();
 }  // pushl()
 
 
 void Decoder::ret(Registers *registers, int memory[1001])
 {
-  //registers->regs[eip] = memory[registers->regs[esp]];
-  //registers->regs[esp] += 4;
   registers->set(eip, memory[registers->get(esp)]);
   registers->set(esp, registers->get(esp)+4);
 }  // ret()
 
 
-void Decoder::subl(Decoder *decoder)
+void Decoder::subl()
 {
   setOperand2(getOperand2() - getOperand1());
 }  // subl()
+
+
+
+
+
+
+char* Decoder::getOpcode()
+{
+  return opcode;
+} // getOpcode()
+
+
+ int Decoder::getOperand1()
+{
+  return *operand1;
+} // getOperand1()
+
+
+ int Decoder::getOperand2()
+{
+  return *operand2;
+} // getOperand2()
+
+
+void Decoder::setOpcode(char* opcod)
+{
+  int len = sizeof(opcod)/sizeof(char); 
+  opcod = new char[len + 1];
+
+  for(int i = 0; i < len; i++)
+    opcode[i]=opcod[i]; 
+} // setOpcode()
+
+
+void Decoder::setOperand1(int op1)
+{
+  *operand1 = op1;
+} // setOperand1
+
+void Decoder::setOperand2(int op2)
+{
+  *operand2 = op2;
+} // setOperand2
+
+
