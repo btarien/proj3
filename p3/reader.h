@@ -1,16 +1,18 @@
-#ifndef READER_H
-#define	READER_H
+#ifndef REGISTERS_H
+#define	REGISTERS_H
 
-#include "instruction.h"
-#include "registers.h"
+typedef enum {eax, ebp, esp, eip} RegName;
 
-class Reader
+class Registers
 {
-  Instruction lines[1000];
-
+	int regs[4];
+	
 public:
-	void fetch(Instruction *instruction, Registers *registers);
-	void read(Registers *registers, const char *filename);
+	int* address(char *ptr, int memory[]);
+	void initialize(int memory[1001]);
+	void print(const char *instruction);
+	int get(int regnum);
+	void set(int regnum, int val);
 };
 
-#endif	// READER_H 
+#endif	// REGISTERS_H 
